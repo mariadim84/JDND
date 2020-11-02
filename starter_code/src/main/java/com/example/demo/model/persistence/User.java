@@ -68,10 +68,5 @@ public class User {
 		this.username = username;
 	}
 
-	public User(String username, String password, Cart cart) {
-		this.username = username;
-		this.password = password;
-		this.cart = cart;
-	}
-	public User (){}
+
 }
