@@ -22,8 +22,8 @@ import com.example.demo.model.persistence.repositories.UserRepository;
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
-
 	public static final Logger log = LoggerFactory.getLogger((OrderController.class));
+
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -35,12 +35,12 @@ public class OrderController {
 	public ResponseEntity<UserOrder> submit(@PathVariable String username) {
 		User user = userRepository.findByUsername(username);
 		if(user == null) {
-			log.info("The user is not found : {}", username );
+			log.info("The user {} is not found.", username );
 			return ResponseEntity.notFound().build();
 		}
 		UserOrder order = UserOrder.createFromCart(user.getCart());
 		orderRepository.save(order);
-		log.info ("The order is submited for the user with username : {}", username);
+		log.info ("The order for user {}  is submitted successfully.", username);
 		return ResponseEntity.ok(order);
 	}
 	
@@ -48,10 +48,10 @@ public class OrderController {
 	public ResponseEntity<List<UserOrder>> getOrdersForUser(@PathVariable String username) {
 		User user = userRepository.findByUsername(username);
 		if(user == null) {
-			log.info("The user is not found : {}", username );
+			log.info("The user {} is not found.", username );
 			return ResponseEntity.notFound().build();
 		}
-		log.info ("The order history is retrieved for user with username : {}", username);
+		log.info ("The order history  for user {} is retrieved.", username);
 		return ResponseEntity.ok(orderRepository.findByUser(user));
 	}
 }

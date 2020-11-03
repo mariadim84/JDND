@@ -52,11 +52,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     new UsernamePasswordAuthenticationToken(
                             creds.getUsername(),
                             creds.getPassword()
-                                //    + new StringBuffer(creds.getUsername().toLowerCase()).reverse().toString(),
+                               //     + new StringBuffer(creds.getUsername().toLowerCase()).reverse().toString()
                             ,new ArrayList<>())
             );
 
         } catch (IOException e) {
+            log.info("User authentication failed.");
             throw new RuntimeException(e);
         }
     }
@@ -65,7 +66,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest req,
                                             HttpServletResponse res,
                                             FilterChain chain,
-                                            Authentication auth) throws IOException, ServletException {
+                                            Authentication auth)  {
 
         String token = JWT.create()
                 .withSubject(((User) auth.getPrincipal()).getUsername())
@@ -75,4 +76,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("User authenticated: {}",  ((User) auth.getPrincipal()).getUsername());
 
     }
+
+    @Override
+    protected void unsuccessfulAuthentication(javax.servlet.http.HttpServletRequest request,
+                                              javax.servlet.http.HttpServletResponse response,
+                                              AuthenticationException failed)
+            throws IOException, javax.servlet.ServletException {
+        log.info("User authentication failed {}.", failed.getMessage());
+        super.unsuccessfulAuthentication(request, response, failed);
+    }
+
 }

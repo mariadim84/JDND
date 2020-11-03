@@ -30,14 +30,14 @@ public class ItemController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Item> getItemById(@PathVariable Long id) {
-		log.info("Get item with id: {} " , id);
+		log.info("Get item with id: {}. " , id);
 		return ResponseEntity.of(itemRepository.findById(id));
 	}
 	
 	@GetMapping("/name/{name}")
 	public ResponseEntity<List<Item>> getItemsByName(@PathVariable String name) {
 		List<Item> items = itemRepository.findByName(name);
-		log.info("Get item with name: {} " , name);
+		log.info("Get item with name: {} ." , name);
 		return items == null || items.isEmpty() ? ResponseEntity.notFound().build()
 				: ResponseEntity.ok(items);
 			

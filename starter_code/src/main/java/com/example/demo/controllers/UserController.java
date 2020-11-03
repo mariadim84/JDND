@@ -51,23 +51,24 @@ public class UserController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
-		log.info ("Creating user {}", createUserRequest.getUsername());
+		log.info("Creating user {}.", createUserRequest.getUsername());
 		User user = new User();
 		user.setUsername(createUserRequest.getUsername());
 		Cart cart = new Cart();
 		cartRepository.save(cart);
 		user.setCart(cart);
-		if (createUserRequest.getPassword().length() <7 ||
-		!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())){
-			log.error("Error with user pwd. Cannot create user {}", createUserRequest.getUsername());
-			return  ResponseEntity.badRequest().build();
+		if (createUserRequest.getPassword().length() < 7) {
+			log.info("Cannot create user {}. Password should be more than 7 digits.", createUserRequest.getUsername());
+			return ResponseEntity.badRequest().build();
+		} else if (!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())) {
+			log.info("Cannot create user {}. Password is not correctly confirmed.", createUserRequest.getUsername());
+			return ResponseEntity.badRequest().build();
+		}
+			user.setPassword(bCryptPasswordEncoder.encode((createUserRequest.getPassword())));
+			//		+ new StringBuffer(createUserRequest.getUsername().toLowerCase()).reverse().toString());
+			userRepository.save(user);
+			log.info("User with username {} is created.", createUserRequest.getUsername());
+			return ResponseEntity.ok(user);
 		}
 
-		user.setPassword(bCryptPasswordEncoder.encode((createUserRequest.getPassword())) );
-			//	+ new StringBuffer(createUserRequest.getUsername().toLowerCase()).reverse().toString()));
-		userRepository.save(user);
-		log.info ("User created with username {}", createUserRequest.getUsername());
-		return ResponseEntity.ok(user);
-	}
-	
 }
