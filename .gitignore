@@ -1,6 +1,7 @@
 README.md
 target/
 out.log
+.DS_Store
 ### STS ###
 .apt_generated
 .classpath
